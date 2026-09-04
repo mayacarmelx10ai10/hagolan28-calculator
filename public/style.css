@@ -113,13 +113,24 @@ h1 {
   padding: 22px;
   margin-bottom: 16px;
   box-shadow: 0 12px 28px oklch(60% 0.1 55 / .08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .field {
-  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
 }
 
-.field:last-child {
+.field-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.field-label-row label {
   margin-bottom: 0;
 }
 
@@ -174,7 +185,6 @@ input:focus {
   color: var(--mint-text);
   border-radius: 14px;
   padding: 12px 16px;
-  margin-bottom: 16px;
   font-size: 0.85rem;
   font-weight: 600;
 }
@@ -190,7 +200,7 @@ input:focus {
   font-weight: 800;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 340px) {
   .field-row {
     flex-direction: column;
     gap: 16px;
@@ -200,7 +210,7 @@ input:focus {
 .hint {
   font-size: 0.78rem;
   color: var(--text-muted);
-  margin: 12px 0 0;
+  margin: 0;
   line-height: 1.5;
 }
 
@@ -213,6 +223,10 @@ input:focus {
   color: var(--text);
 }
 
+.rate-readout {
+  font-size: 1.125rem;
+}
+
 .auto-badge {
   font-size: 0.68rem;
   font-weight: 700;
@@ -221,6 +235,9 @@ input:focus {
   padding: 4px 10px;
   border-radius: 20px;
   white-space: nowrap;
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .actions {
@@ -251,7 +268,7 @@ input:focus {
 }
 
 .results h2 {
-  margin: 0 0 8px;
+  margin: 0;
   font-size: 0.85rem;
   font-weight: 700;
   opacity: 0.85;

@@ -110,7 +110,9 @@ function applyStateToForm() {
   document.getElementById('water').value = state.settings.water || '';
   if (state.rate) {
     document.getElementById('rateReadout').textContent = `₪${state.rate.rateWithVat.toFixed(4)}`;
-    document.getElementById('rateUpdatedNote').textContent = `מעודכן מתאריך ${formatDate(state.rate.effectiveFrom)} (לפני מע"מ: ₪${state.rate.baseRate.toFixed(4)})`;
+    const badge = document.getElementById('rateBadge');
+    badge.textContent = `מתעדכן אוטומטית · ${formatDateShort(state.rate.effectiveFrom)}`;
+    badge.title = `לפני מע"מ: ₪${state.rate.baseRate.toFixed(4)}`;
   }
   updateKwhReadout();
 }
