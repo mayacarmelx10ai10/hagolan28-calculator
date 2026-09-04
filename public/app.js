@@ -112,7 +112,7 @@ function applyStateToForm() {
   if (state.rate) {
     document.getElementById('rateReadout').textContent = `₪${state.rate.rateWithVat.toFixed(4)}`;
     const badge = document.getElementById('rateBadge');
-    badge.textContent = `מתעדכן אוטומטית · ${formatDateShort(state.rate.effectiveFrom)}`;
+    badge.textContent = `התעדכן ב-${formatDateShort(state.rate.effectiveFrom)}`;
     badge.title = `לפני מע"מ: ₪${state.rate.baseRate.toFixed(4)}`;
   }
   updateKwhReadout();
