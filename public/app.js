@@ -93,13 +93,13 @@ function populateTenantNamesList() {
   list.innerHTML = names.map((n) => `<option value="${n.replace(/"/g, '&quot;')}"></option>`).join('');
 }
 
-function findLastReadingForName(name) {
+function findLastEntryForName(name) {
   const trimmed = (name || '').trim();
   if (!trimmed) return null;
   const matches = historyCache.filter((h) => (h.name || '').trim() === trimmed);
   if (matches.length === 0) return null;
   matches.sort((a, b) => new Date(b.date) - new Date(a.date));
-  return matches[0].curr;
+  return matches[0];
 }
 
 function applyStateToForm() {
@@ -218,14 +218,14 @@ function saveToHistory() {
   saveHistoryCache();
   populateTenantNamesList();
 
-  state.tenant.prev = state.tenant.curr !== null && state.tenant.curr !== undefined ? state.tenant.curr : state.tenant.prev;
+  state.tenant.name = '';
+  state.tenant.prev = null;
   state.tenant.curr = null;
   saveState();
 
-  const nextStart = entry.periodEnd || '';
-  document.getElementById('periodStart').value = nextStart;
+  document.getElementById('periodStart').value = '';
+  document.getElementById('periodEnd').value = '';
   periodEndManuallySet = false;
-  document.getElementById('periodEnd').value = nextStart ? addTwoMonthsMinusDay(nextStart) : '';
 
   lastCalculation = null;
   applyStateToForm();
@@ -359,11 +359,17 @@ function init() {
     state.tenant.name = e.target.value;
     saveState();
 
-    const lastCurr = findLastReadingForName(e.target.value);
-    if (lastCurr !== null && lastCurr !== undefined) {
-      state.tenant.prev = lastCurr;
-      document.getElementById('prevReading').value = lastCurr;
+    const lastEntry = findLastEntryForName(e.target.value);
+    if (lastEntry) {
+      state.tenant.prev = lastEntry.curr;
+      document.getElementById('prevReading').value = lastEntry.curr;
       updateKwhReadout();
+
+      if (lastEntry.periodEnd) {
+        document.getElementById('periodStart').value = lastEntry.periodEnd;
+        periodEndManuallySet = false;
+        document.getElementById('periodEnd').value = addTwoMonthsMinusDay(lastEntry.periodEnd);
+      }
     }
     calculate();
   });
