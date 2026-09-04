@@ -70,6 +70,7 @@ function loadState() {
   state.rate = getCurrentRate();
   applyStateToForm();
   refreshHistoryCache();
+  calculate();
 }
 
 function saveState() {
@@ -176,7 +177,8 @@ function calculate() {
   const water = numOrNull(document.getElementById('water').value) || 0;
 
   if (prev === null || curr === null) {
-    alert('נא להזין מספר התחלתי ומספר סופי');
+    hideResults();
+    lastCalculation = null;
     return;
   }
 
@@ -378,53 +380,53 @@ function init() {
       document.getElementById('prevReading').value = lastCurr;
       updateKwhReadout();
     }
+    calculate();
   });
 
   document.getElementById('prevReading').addEventListener('input', (e) => {
     state.tenant.prev = numOrNull(e.target.value);
     saveState();
     updateKwhReadout();
-    hideResults();
+    calculate();
   });
 
   document.getElementById('currReading').addEventListener('input', (e) => {
     state.tenant.curr = numOrNull(e.target.value);
     saveState();
     updateKwhReadout();
-    hideResults();
+    calculate();
   });
 
   document.getElementById('periodStart').addEventListener('input', (e) => {
-    hideResults();
     if (!periodEndManuallySet && e.target.value) {
       document.getElementById('periodEnd').value = addTwoMonthsMinusDay(e.target.value);
     }
+    calculate();
   });
 
   document.getElementById('periodEnd').addEventListener('input', () => {
     periodEndManuallySet = true;
-    hideResults();
+    calculate();
   });
 
   document.getElementById('discountPercent').addEventListener('input', (e) => {
     state.settings.discountPercent = numOrNull(e.target.value) || 0;
     saveState();
-    hideResults();
+    calculate();
   });
 
   document.getElementById('fixedExpenses').addEventListener('input', (e) => {
     state.settings.fixedExpenses = numOrNull(e.target.value) || 0;
     saveState();
-    hideResults();
+    calculate();
   });
 
   document.getElementById('water').addEventListener('input', (e) => {
     state.settings.water = numOrNull(e.target.value) || 0;
     saveState();
-    hideResults();
+    calculate();
   });
 
-  document.getElementById('calcBtn').addEventListener('click', calculate);
   document.getElementById('saveHistoryBtn').addEventListener('click', saveToHistory);
 
   document.getElementById('historyToggle').addEventListener('click', openHistory);

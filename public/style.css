@@ -240,10 +240,6 @@ input:focus {
   text-overflow: ellipsis;
 }
 
-.actions {
-  margin-top: 4px;
-}
-
 .btn-primary {
   width: 100%;
   padding: 16px;
