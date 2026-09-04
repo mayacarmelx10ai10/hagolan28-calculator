@@ -165,7 +165,7 @@ input[type="date"] {
   text-align: right;
   /* Less padding gives the native picker's own content more room to
      paint inside the box on narrow screens, two to a row. */
-  padding: 9px 6px;
+  padding: 9px 2px;
 }
 
 input:focus {
