@@ -56,13 +56,15 @@
         <span class="consumption-value"><span id="kwhReadout">0.00</span> קוט"ש</span>
       </div>
 
-      <div class="field">
-        <label for="periodStart">תחילת התקופה</label>
-        <input type="date" id="periodStart">
-      </div>
-      <div class="field">
-        <label for="periodEnd">סוף התקופה</label>
-        <input type="date" id="periodEnd">
+      <div class="field-row">
+        <div class="field">
+          <label for="periodStart">תחילת התקופה</label>
+          <input type="date" id="periodStart">
+        </div>
+        <div class="field">
+          <label for="periodEnd">סוף התקופה</label>
+          <input type="date" id="periodEnd">
+        </div>
       </div>
     </section>
 
@@ -93,7 +95,6 @@
     </section>
 
     <section class="card results" id="resultsCard" hidden>
-      <h2>סיכום</h2>
       <div id="summaryText"></div>
       <button type="button" id="saveHistoryBtn" class="btn-primary">שמור והתחל תקופה חדשה</button>
     </section>

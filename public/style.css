@@ -118,6 +118,10 @@ h1 {
   gap: 16px;
 }
 
+.card[hidden] {
+  display: none;
+}
+
 .field {
   display: flex;
   flex-direction: column;
@@ -159,6 +163,9 @@ input[type="date"] {
      scrambles the picker's own day/month/year layout. */
   direction: ltr;
   text-align: right;
+  /* Less padding gives the native picker's own content more room to
+     paint inside the box on narrow screens, two to a row. */
+  padding: 9px 6px;
 }
 
 input:focus {
@@ -263,32 +270,23 @@ input:focus {
   box-shadow: 0 12px 28px oklch(68% 0.16 35 / .3);
 }
 
-.results h2 {
-  margin: 0;
-  font-size: 0.85rem;
-  font-weight: 700;
-  opacity: 0.85;
-}
-
 #summaryText {
-  font-size: 0.85rem;
-}
-
-#summaryText .summary-row {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  padding: 6px 0;
-  opacity: 0.92;
-}
-
-#summaryText .summary-row:last-child {
-  opacity: 1;
-  margin-top: 8px;
   background: rgba(255, 255, 255, .16);
   border-radius: 16px;
-  padding: 14px 16px;
-  font-size: 1.05rem;
+  padding: 16px 18px;
+}
+
+.total-label {
+  font-size: 1rem;
   font-weight: 700;
+}
+
+.total-value {
+  font-size: 1.6rem;
+  font-weight: 800;
 }
 
 .warning {

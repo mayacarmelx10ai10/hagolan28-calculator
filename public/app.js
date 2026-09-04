@@ -148,12 +148,6 @@ function addTwoMonthsMinusDay(dateStr) {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-function formatDate(str) {
-  if (!str) return '';
-  const d = new Date(str);
-  return d.toLocaleDateString('he-IL', { year: 'numeric', month: 'long', day: 'numeric' });
-}
-
 function formatDateShort(str) {
   if (!str) return '';
   const d = new Date(str);
@@ -192,21 +186,10 @@ function calculate() {
   const finalTotal = electric - discountAmount + fixedExpensesTotal + waterTotal;
 
   const summaryEl = document.getElementById('summaryText');
-  let html = '';
-
-  if (periodStart && periodEnd) {
-    html += `<div class="summary-row"><span>תקופה</span><span>${formatDate(periodStart)} — ${formatDate(periodEnd)}</span></div>`;
-    html += `<div class="summary-row"><span>מספר חודשים</span><span>${months}</span></div>`;
-  }
-  html += `<div class="summary-row"><span>צריכה</span><span>${kwh.toFixed(2)} קוט"ש</span></div>`;
-  html += `<div class="summary-row"><span>מחיר לקוט"ש (כולל מע"מ)</span><span>₪${pricePerKwh.toFixed(4)}</span></div>`;
-  html += `<div class="summary-row"><span>עלות חשמל</span><span>₪${electric.toFixed(2)}</span></div>`;
-  if (discountAmount) html += `<div class="summary-row"><span>הנחה (${discountPercent}%)</span><span>-₪${discountAmount.toFixed(2)}</span></div>`;
-  if (fixedExpensesTotal) html += `<div class="summary-row"><span>חיוב קבוע (₪${fixedExpenses.toFixed(2)} × ${months})</span><span>+₪${fixedExpensesTotal.toFixed(2)}</span></div>`;
-  if (waterTotal) html += `<div class="summary-row"><span>חיוב מים (₪${water.toFixed(2)} × ${months})</span><span>+₪${waterTotal.toFixed(2)}</span></div>`;
-  html += `<div class="summary-row"><span>סה"כ לתשלום</span><span>₪${finalTotal.toFixed(2)}</span></div>`;
-
-  summaryEl.innerHTML = html;
+  summaryEl.innerHTML = `
+    <span class="total-label">סה"כ לתשלום</span>
+    <span class="total-value">₪${finalTotal.toFixed(2)}</span>
+  `;
   document.getElementById('resultsCard').hidden = false;
 
   lastCalculation = {
@@ -239,12 +222,14 @@ function saveToHistory() {
   state.tenant.curr = null;
   saveState();
 
-  document.getElementById('periodStart').value = '';
-  document.getElementById('periodEnd').value = '';
+  const nextStart = entry.periodEnd || '';
+  document.getElementById('periodStart').value = nextStart;
   periodEndManuallySet = false;
-  hideResults();
+  document.getElementById('periodEnd').value = nextStart ? addTwoMonthsMinusDay(nextStart) : '';
+
   lastCalculation = null;
   applyStateToForm();
+  calculate();
 }
 
 function renderHistoryTable() {
