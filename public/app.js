@@ -161,6 +161,14 @@ function hideResults() {
 let lastCalculation = null;
 
 function calculate() {
+  try {
+    calculateUnsafe();
+  } catch (err) {
+    console.error('calculate failed:', err);
+  }
+}
+
+function calculateUnsafe() {
   const name = document.getElementById('tenantName').value.trim();
   const prev = numOrNull(document.getElementById('prevReading').value);
   const curr = numOrNull(document.getElementById('currReading').value);
@@ -354,8 +362,21 @@ function closeHistory() {
   document.body.classList.remove('modal-open');
 }
 
+// A missing element (e.g. a stale cached file mismatched with a newer one)
+// should never take down the rest of the app — attach defensively so one
+// bad reference can't stop every other listener (and loadState) from
+// running.
+function on(id, event, handler) {
+  const el = document.getElementById(id);
+  if (!el) {
+    console.error(`Missing element #${id}, skipping its listener`);
+    return;
+  }
+  el.addEventListener(event, handler);
+}
+
 function init() {
-  document.getElementById('tenantName').addEventListener('input', (e) => {
+  on('tenantName', 'input', (e) => {
     state.tenant.name = e.target.value;
     saveState();
 
@@ -374,59 +395,63 @@ function init() {
     calculate();
   });
 
-  document.getElementById('prevReading').addEventListener('input', (e) => {
+  on('prevReading', 'input', (e) => {
     state.tenant.prev = numOrNull(e.target.value);
     saveState();
     updateKwhReadout();
     calculate();
   });
 
-  document.getElementById('currReading').addEventListener('input', (e) => {
+  on('currReading', 'input', (e) => {
     state.tenant.curr = numOrNull(e.target.value);
     saveState();
     updateKwhReadout();
     calculate();
   });
 
-  document.getElementById('periodStart').addEventListener('input', (e) => {
+  on('periodStart', 'input', (e) => {
     if (!periodEndManuallySet && e.target.value) {
       document.getElementById('periodEnd').value = addTwoMonthsMinusDay(e.target.value);
     }
     calculate();
   });
 
-  document.getElementById('periodEnd').addEventListener('input', () => {
+  on('periodEnd', 'input', () => {
     periodEndManuallySet = true;
     calculate();
   });
 
-  document.getElementById('discountPercent').addEventListener('input', (e) => {
+  on('discountPercent', 'input', (e) => {
     state.settings.discountPercent = numOrNull(e.target.value) || 0;
     saveState();
     calculate();
   });
 
-  document.getElementById('fixedExpenses').addEventListener('input', (e) => {
+  on('fixedExpenses', 'input', (e) => {
     state.settings.fixedExpenses = numOrNull(e.target.value) || 0;
     saveState();
     calculate();
   });
 
-  document.getElementById('water').addEventListener('input', (e) => {
+  on('water', 'input', (e) => {
     state.settings.water = numOrNull(e.target.value) || 0;
     saveState();
     calculate();
   });
 
-  document.getElementById('saveHistoryBtn').addEventListener('click', saveToHistory);
+  on('saveHistoryBtn', 'click', saveToHistory);
 
-  document.getElementById('historyToggle').addEventListener('click', openHistory);
-  document.getElementById('closeHistory').addEventListener('click', closeHistory);
-  document.getElementById('historyModal').addEventListener('click', (e) => {
+  on('historyToggle', 'click', openHistory);
+  on('closeHistory', 'click', closeHistory);
+  on('historyModal', 'click', (e) => {
     if (e.target.id === 'historyModal') closeHistory();
   });
 
-  loadState();
+  try {
+    loadState();
+  } catch (err) {
+    console.error('loadState failed:', err);
+  }
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch((err) => console.error('SW registration failed:', err));
