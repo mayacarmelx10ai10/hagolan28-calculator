@@ -29,6 +29,11 @@
 html, body {
   overflow-x: hidden;
   max-width: 100%;
+  /* iOS shows a visible sideways "give" when you swipe near an edge even
+     on a page with zero real horizontal overflow (elastic overscroll) —
+     this reads as "the page scrolls left/right" even though nothing is
+     actually wider than the viewport. Turn that bounce off outright. */
+  overscroll-behavior-x: none;
 }
 
 body {
@@ -138,13 +143,16 @@ h1 {
 
 .field-label-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  gap: 4px 8px;
   margin-bottom: 6px;
 }
 
 .field-label-row label {
   margin-bottom: 0;
+  min-width: 0;
 }
 
 .field label {

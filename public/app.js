@@ -102,9 +102,10 @@ function findLastEntryForName(name) {
   return matches[0];
 }
 
-function updatePrevFieldVisibility() {
+function updateTenantDependentFieldsVisibility() {
   const hasName = document.getElementById('tenantName').value.trim().length > 0;
   document.getElementById('prevReadingField').hidden = !hasName;
+  document.getElementById('periodDatesRow').hidden = !hasName;
 }
 
 function applyStateToForm() {
@@ -121,7 +122,7 @@ function applyStateToForm() {
     badge.title = `בתוקף מ-${formatDateShort(state.rate.effectiveFrom)} · לפני מע"מ: ₪${state.rate.baseRate.toFixed(4)}`;
   }
   updateKwhReadout();
-  updatePrevFieldVisibility();
+  updateTenantDependentFieldsVisibility();
 }
 
 function currentKwh() {
@@ -385,7 +386,7 @@ function init() {
   on('tenantName', 'input', (e) => {
     state.tenant.name = e.target.value;
     saveState();
-    updatePrevFieldVisibility();
+    updateTenantDependentFieldsVisibility();
 
     if (!e.target.value.trim()) {
       state.tenant.prev = null;
