@@ -18,6 +18,19 @@
 
 * { box-sizing: border-box; }
 
+/* A component's own "display: flex/grid" rule can silently beat the
+   browser's default [hidden]{display:none} at equal specificity — hit
+   this bug twice already, so make it structurally impossible everywhere
+   instead of chasing it component by component. */
+[hidden] {
+  display: none !important;
+}
+
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
   margin: 0;
   font-family: 'Rubik', 'Segoe UI', Arial, sans-serif;
@@ -116,10 +129,6 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.card[hidden] {
-  display: none;
 }
 
 .field {

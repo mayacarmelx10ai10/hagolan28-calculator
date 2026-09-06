@@ -102,6 +102,11 @@ function findLastEntryForName(name) {
   return matches[0];
 }
 
+function updatePrevFieldVisibility() {
+  const hasName = document.getElementById('tenantName').value.trim().length > 0;
+  document.getElementById('prevReadingField').hidden = !hasName;
+}
+
 function applyStateToForm() {
   document.getElementById('tenantName').value = state.tenant.name || '';
   document.getElementById('prevReading').value = state.tenant.prev ?? '';
@@ -112,10 +117,11 @@ function applyStateToForm() {
   if (state.rate) {
     document.getElementById('rateReadout').textContent = `₪${state.rate.rateWithVat.toFixed(4)}`;
     const badge = document.getElementById('rateBadge');
-    badge.textContent = `התעדכן ב-${formatDateShort(state.rate.effectiveFrom)}`;
-    badge.title = `לפני מע"מ: ₪${state.rate.baseRate.toFixed(4)}`;
+    badge.textContent = 'המחיר העדכני ביותר';
+    badge.title = `בתוקף מ-${formatDateShort(state.rate.effectiveFrom)} · לפני מע"מ: ₪${state.rate.baseRate.toFixed(4)}`;
   }
   updateKwhReadout();
+  updatePrevFieldVisibility();
 }
 
 function currentKwh() {
@@ -379,6 +385,13 @@ function init() {
   on('tenantName', 'input', (e) => {
     state.tenant.name = e.target.value;
     saveState();
+    updatePrevFieldVisibility();
+
+    if (!e.target.value.trim()) {
+      state.tenant.prev = null;
+      document.getElementById('prevReading').value = '';
+      updateKwhReadout();
+    }
 
     const lastEntry = findLastEntryForName(e.target.value);
     if (lastEntry) {
